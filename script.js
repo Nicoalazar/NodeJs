@@ -38,14 +38,41 @@ function contarPorColor(color) {
 }
 
 contarPorColor('azul');
-*/
-// CLASE 5
-//TODO: COMPLETAR
 
+//CLASE 5
+// Contruimos la base del proyecto con npm init -y
+// index.js
+function handleCommand() {
+  // process.argv[0] es la ruta a Node.js
+  // process.argv[1] es la ruta al archivo actual
+  // process.argv[2] y siguientes son los argumentos proporcionados
+  const command = process.argv[2];
+  const params = process.argv[3];
+
+  switch (command) {
+    case 'GET':
+      console.log('Toma un dato');
+      break;
+    case 'POST':
+      console.log(`Recibimos ${params} satisfactoriamente`);
+      break;
+    case 'PUT':
+      console.log(`Modificamos el item con id: ${params} satisfactoriamente`);
+      break;
+    case 'DELETE':
+      console.log(`El item con id: ${params} se eliminó con exito`);
+      break;
+    default:
+      console.log('Comando no reconocido. Usa GET, POST, PUT o DELETE');
+  }
+}
+
+handleCommand();
+*/
 // CLASE 6
 let personajes = {};
 let personajesFiltrados = [];
-const cantidadPersonajes = 5;
+const cantidadPersonajes = 1;
 fetch('https://rickandmortyapi.com/api/character')
     .then((response) => response.json())
     .then((data) => personajes = data.results)
