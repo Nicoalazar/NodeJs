@@ -72,22 +72,23 @@ handleCommand();
 // CLASE 6
 let personajes = {};
 let personajesFiltrados = [];
-const cantidadPersonajes = 1;
-fetch('https://rickandmortyapi.com/api/character')
+const cantidadPersonajes = 5;
+const url = 'https://rickandmortyapi.com/api/character';
+fetch(url)
     .then((response) => response.json())
-    .then((data) => personajes = data.results)
-    .catch((error) => console.error(error))
-    .finally(() => {
+    .then((data) => {personajes = data.results;
         for (let i = 0; i < cantidadPersonajes; i++) {
             personajesFiltrados.push(personajes[i].name);
         }
         console.log(personajesFiltrados);
-    });
+    })
+    .catch((error) => console.error(error))
+    .finally(() => console.log('Primer proceso finalizado'));
 personajes2 = {};
 personajesFiltrados2 = [];
 async function obtenerPersonajes() {
     try {
-        const response = await fetch('https://rickandmortyapi.com/api/character');
+        const response = await fetch(url);
         const data = await response.json();
         personajes2 = data.results;
         for (let i = 0; i < cantidadPersonajes; i++) {
@@ -96,6 +97,8 @@ async function obtenerPersonajes() {
         console.log(personajesFiltrados2);
     } catch (error) {
         console.error(error);
+    } finally {
+        console.log('Segundo proceso finalizado');
     }
 }
 obtenerPersonajes();
