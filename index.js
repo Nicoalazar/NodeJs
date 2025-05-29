@@ -68,7 +68,7 @@ function handleCommand() {
 }
 
 handleCommand();
-*/
+
 // CLASE 6
 let personajes = {};
 let personajesFiltrados = [];
@@ -99,3 +99,112 @@ async function obtenerPersonajes() {
     }
 }
 obtenerPersonajes();
+*/
+const BASE_URL = 'https://fakestoreapi.com/';
+/**
+ * Realiza una peticion HTTP al endpoint especificado
+ * @param {string} method - Metodo HTTP (GET, POST, PUT, DELETE)
+ * @param {string} endpoint - Endpoint al que se realizar  la peticion
+ * @param {object} [productData] - Objeto con los datos a enviar en el body de la peticion
+ * @version 1.0
+ */
+async function apiRest(method,endpoint,productData = null) {
+  try {
+    const config = {
+      method: method,
+    };
+    if(productData) {
+      config.headers = {
+        'Content-Type': 'application/json'
+      };
+      config.body = JSON.stringify(productData);
+    };
+
+    const response = await fetch (`${BASE_URL}${endpoint}`,config);
+    
+    if(!response.ok){
+      throw new Error(`Status: ${response.status}`)
+    }
+
+    const data = await response.json();
+    console.log(data);
+  
+  } catch (error) {
+      console.error('Error en la petición.', error.message);
+    }
+}
+
+/**
+ * Parsea los argumentos de la linea de comandos
+ * @returns {object} Un objeto con las propiedades method, endpoint y additionalArgs
+ * @version 1.0
+ */
+function parseArguments() {
+  const args = process.argv.slice(2);
+  
+  return {
+    method: args[0],
+    endpoint: args[1],
+    additionalArgs: args.slice(2)
+  };
+}
+
+/**
+ * Crea un objeto de datos del producto a partir de los argumentos proporcionados.
+ * 
+ * @param {array} args - Un array que contiene los argumentos para crear el producto.
+ * @returns {object|null} Un objeto con las propiedades title, price y category, 
+ *                        o null si los argumentos son insuficientes.
+ * @version 1.0
+ */
+
+function createProductData(args) {
+  if (args.length < 3) {
+    console.error('POST requiere: title, price, category');
+    return null;
+  }
+  
+  const [title, price, category] = args;
+  
+  return {
+    title,
+    price: parseFloat(price) || price,
+    category,
+  };
+}
+
+/**
+ * Ejecuta el comando de la linea de comandos
+ * 
+ * Analiza los argumentos de la linea de comandos y ejecuta el comando
+ * correspondiente. Los comandos disponibles son GET, POST y DELETE.
+ * 
+ * @version 1.0
+ */
+async function handleCommand() {
+
+  const parsed = parseArguments();
+  
+  let {method, endpoint, additionalArgs} = parsed;
+
+  method = method.toUpperCase();
+
+  switch (method) {
+    case 'GET':
+    case 'DELETE':
+      await apiRest(method, endpoint);
+      break;
+      
+    case 'POST':
+      const productData = createProductData(additionalArgs);
+      if (productData) {
+        await apiRest(method, endpoint, productData);
+      }
+      break;
+          
+    default:
+      console.log('Comando no reconocido. Usa GET, POST o DELETE');
+  }
+}
+
+handleCommand();
