@@ -139,15 +139,11 @@ async function apiRest(method,endpoint,productData = null) {
  * @returns {object} Un objeto con las propiedades method, endpoint y additionalArgs
  * @version 1.0
  */
-function parseArguments() {
-  const args = process.argv.slice(2);
-  
-  return {
-    method: args[0],
-    endpoint: args[1],
-    additionalArgs: args.slice(2)
-  };
-}
+const parseArguments = () => ({
+  method: process.argv[2],
+  endpoint: process.argv[3],
+  additionalArgs: process.argv.slice(4),
+});
 
 /**
  * Crea un objeto de datos del producto a partir de los argumentos proporcionados.
@@ -158,7 +154,7 @@ function parseArguments() {
  * @version 1.0
  */
 
-function createProductData(args) {
+const createProductData = (args) => {
   if (args.length < 3) {
     console.error('POST requiere: title, price, category');
     return null;
