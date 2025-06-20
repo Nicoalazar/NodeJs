@@ -4,11 +4,15 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node index.js",
+    "server": "node server.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Nico Zalazar",
   "license": "ISC",
   "description": "",
-  "type":"module"
+  "type": "module",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
 }
