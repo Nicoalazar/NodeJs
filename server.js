@@ -1,8 +1,54 @@
 import express from 'express'
 import cors from 'cors';
+import dotenv from 'dotenv';
+
+//import authRoutes from './routes/auth.js'; //TODO: completar ruta
+//import userRoutes from './routes/user.js'; //TODO: completar ruta
+
+import errorHandler from './src/middlewares/errorHandler.js';
+
+dotenv.config();
 
 const app = express();
+const PORT =  process.env.PORT || 3000; 
 
+// Configuración de CORS
+const corsOptions = {
+  origin: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
+
+// Ruta de salud del servidor
+app.get('/health', (req, res) => {
+    res.json({
+        status: 'ok',
+        success: true,
+        message: 'Servidor corriendo correctamente',
+        timestamp: new Date().toISOString(),
+        environment: process.env.INIT_CWD
+    })
+});
+
+// Rutas principales
+//app.use('/api/auth', authRoutes); //TODO: activar
+//app.use('/api/users', userRoutes); //TODO: activar
+
+// Middleware de manejo de errores
+app.use(errorHandler);
+
+// Iniciar el servidor
+app.listen(PORT, ()=> {
+    console.log(`servidor corriendo en: http://localhost:${PORT}`);
+    console.log(`ambiente: ${process.env.INIT_CWD}`);
+    console.log('Autenticación activa');
+    console.log('Firebase conectado');
+});
+
+export default app;
+/*
 const list = [
     {id:1, name: 'Juan', email: 'juan@gmail.com'},
     {id:2, name: 'Pedro', email: 'pedro@gmail.com'},
@@ -13,17 +59,12 @@ const list = [
 
 ]
 
-app.use(cors(
-    {
-    origin: ['http://localhost:3000', 'https://mi-frontend.com'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true
-    }
-))
 
 app.get("/welcome",(req,res)=> {
     res.send(`
     <h1> Bienvenido a mi servidor </h1>
+    <p> Este servidor se esta ejecutando en el puerto ${PORT} </p>
+    
     `)
 })
 
@@ -81,6 +122,4 @@ app.use((req, res) => {
         timestamp: new Date().toISOString()
     });
 });
-const PORT =  3000; 
-
-app.listen(PORT, ()=> console.log(`servidor corriendo en: http://localhost:${PORT}`));
+*/
