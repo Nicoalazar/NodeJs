@@ -4,7 +4,7 @@ import { authenticateToken } from '../middlewares/auth.middleware.js';
 
 const productRouter = express.Router();
 
-// Aplicamos el middleware en todas las rutas
+// Aplica el middleware en todas las rutas
 productRouter.use(authenticateToken);
 
 productRouter.get('/', productController.getAllProducts);

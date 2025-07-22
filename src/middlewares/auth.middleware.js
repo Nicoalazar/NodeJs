@@ -1,4 +1,3 @@
-// middlewares/auth.middleware.js
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
@@ -17,7 +16,7 @@ export const authenticateToken = (req, res, next) => {
   jwt.verify(token, process.env.JWT_SECRET, (err, userData) => {
     if (err) return res.status(403).json({ error: 'Token inválido' });
 
-    // Podríamos guardar los datos del usuario en la request
+    // Podría guardar los datos del usuario en la request
     req.user = userData;
     next();
   });

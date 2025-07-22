@@ -8,11 +8,6 @@ export const getAll = async () => {
   return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
-const docRef = doc(db, "products", "ID_DE_PRUEBA");
-const snap = await getDoc(docRef);
-
-console.log(snap.exists() ? snap.data() : "No existe");
-
 export const getById = async (id) => {
   const productRef = doc(db, "products", id);
   const productSnap = await getDoc(productRef);

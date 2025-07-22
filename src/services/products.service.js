@@ -1,4 +1,3 @@
-// services/products.service.js
 import * as ProductModel from '../models/product.model.js';
 
 export const getAllProducts = async () => {
@@ -10,9 +9,14 @@ export const getProductById = async (id) => {
 };
 
 export const createProduct = async (product) => {
-  return await ProductModel.create(product);
+  const productId = await ProductModel.createProduct(product);
+  return {
+    id: productId,
+    ...product,
+  };
 };
 
 export const deleteProduct = async (id) => {
-  return await ProductModel.remove(id);
+  await ProductModel.deleteProduct(id);
+  return true;
 };
