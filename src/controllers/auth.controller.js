@@ -5,8 +5,14 @@ export const login = (req, res) => {
   const token = authService.login(email, password);
 
   if (token) {
-    res.json({ token: `Bearer ${token}` });
+    res.status(200).json({ 
+      success: true,
+      token: `Bearer ${token}` 
+    });
   } else {
-    res.status(401).json({ error: 'Credenciales inválidas' });
+    res.status(401).json({ 
+      success: false,
+      error: 'Credenciales inválidas' 
+    });
   }
 };

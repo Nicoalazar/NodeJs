@@ -10,11 +10,17 @@ export const authenticateToken = (req, res, next) => {
   const token = authHeader && authHeader.split(' ')[1];
 
   if (!token) {
-    return res.status(401).json({ error: 'Token no proporcionado' });
+    return res.status(401).json({ 
+      success: false,
+      error: 'Token no proporcionado'
+    });
   }
 
   jwt.verify(token, process.env.JWT_SECRET, (err, userData) => {
-    if (err) return res.status(403).json({ error: 'Token inválido' });
+    if (err) return res.status(403).json({ 
+      success: false,
+      error: 'Token inválido'
+    });
 
     // Podría guardar los datos del usuario en la request
     req.user = userData;
