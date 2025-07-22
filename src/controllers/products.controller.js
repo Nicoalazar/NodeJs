@@ -1,41 +1,93 @@
+import { count } from 'firebase/firestore';
 import * as productService from '../services/products.service.js';
 
 export const getAllProducts = async (req, res) => {
   try {
     const products = await productService.getAllProducts();
-    res.json(products);
+    res.status(200).json({
+      success: true, 
+      data: products,
+      count: products.length
+    });
   } catch (err) {
-    res.status(500).json({ error: 'Error al obtener productos' });
+    res.status(500).json({ 
+      success: false, 
+      error: 'Error al obtener productos' 
+    });
   }
 };
 
 export const getProductById = async (req, res) => {
   try {
-    const product = await productService.getProductById(req.params.id);
-    if (product) res.json(product);
-    else res.status(404).json({ error: 'Producto no encontrado' });
+    const { id } = req.params
+    if (!id){
+      return res.status(400).json({ 
+        success: false,
+        error: 'ID de producto no proporcionado'
+      });
+    }
+    const product = await productService.getProductById(id);
+    if (product) res.status(200).json({
+      success: true, 
+      data: product
+    });
+    else res.status(404).json({ 
+      success: false, 
+      error: 'Producto no encontrado' 
+    });
   } catch (err) {
-    res.status(500).json({ error: 'Error al buscar producto' });
+    res.status(500).json({ 
+      success: false,
+      error: 'Error al buscar producto'
+    });
   }
 };
 
 export const createProduct = async (req, res) => {
   try {
-    const product = await productService.createProduct(req.body);
-    res.status(201).json({ message: 'Producto creado', data: product });
+    const productData = req.body;
+    if (!productData) {
+      return res.status(400).json({ 
+        success: false,
+        error: 'Datos de producto no proporcionados'
+      });
+    }
+    const product = await productService.createProduct(productData);
+    res.status(201).json({ 
+      success: true,
+      message: 'Producto creado', 
+      data: product 
+    });
   } catch (err) {
-    res.status(500).json({ error: 'Error al crear producto' });
+    res.status(500).json({ 
+      success: false,
+      error: 'Error al crear producto' 
+    });
   }
 };
 
 export const deleteProduct = async (req, res) => {
   try {
-    const deleted = await productService.deleteProduct(req.params.id);
-    if (deleted)
-      res.json({ message: `Producto con ID ${req.params.id} eliminado` });
-    else
-      res.status(404).json({ error: 'Producto no encontrado' });
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ 
+        success: false,
+        error: 'ID de producto no proporcionado'
+      });
+    }
+    const deleted = await productService.deleteProduct(id);
+    if (deleted){
+      res.status(204).json();
+    }else{
+      res.status(404).json({ 
+        success: false,
+        error: 'Producto no encontrado'
+      });
+    }
   } catch (err) {
-    res.status(500).json({ error: 'Error al eliminar producto' });
+      res.status(500).json({ 
+        success: false,
+        error: 'Error al eliminar producto' 
+      });
   }
 };
